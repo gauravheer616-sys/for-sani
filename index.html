@@ -3,79 +3,89 @@
 <head>
   <meta charset="utf-8" />
   <title>Be My Valentine?</title>
-
   <style>
-    body {
+    body{
       font-family: Arial, sans-serif;
-      text-align: center;
-      padding-top: 120px;
-      background-color: #ffe6f0;
-      overflow: hidden;
+      text-align:center;
+      padding-top:120px;
+      background:#ffe6f0;
+      overflow:hidden;
+    }
+    h1{ font-size:32px; }
+
+    .btn{
+      font-size:20px;
+      padding:12px 24px;
+      margin:12px;
+      border:none;
+      border-radius:10px;
+      cursor:pointer;
+      transition:0.2s;
+    }
+    .yes-btn{ background:#ff4da6; color:#fff; }
+    .yes-btn:hover{ background:#ff1a8c; }
+
+    /* Put the No button in absolute mode so it can run */
+    #noBtn{
+      position:absolute;
+      background:#ccc;
     }
 
-    h1 {
-      font-size: 32px;
-    }
-
-    button {
-      font-size: 20px;
-      padding: 12px 24px;
-      margin: 12px;
-      cursor: pointer;
-      border: none;
-      border-radius: 8px;
-      transition: 0.2s;
-      position: relative;
-    }
-
-    .yes-btn {
-      background-color: #ff4da6;
-      color: white;
-    }
-
-    .yes-btn:hover {
-      background-color: #ff1a8c;
-    }
-
-    .no-btn {
-      background-color: #cccccc;
-      position: absolute;
-    }
-
-    #msg {
-      margin-top: 30px;
-      font-size: 24px;
-      font-weight: bold;
+    #msg{
+      margin-top:30px;
+      font-size:24px;
+      font-weight:bold;
     }
   </style>
 </head>
 
 <body>
-
   <h1>💘 Sani, will you be my Valentine? 💘</h1>
 
-  <button class="yes-btn" onclick="yes()">Yes 💖</button>
-  <button class="no-btn" id="noBtn">No 😌</button>
+  <button class="btn yes-btn" onclick="yes()">Yes 💖</button>
+  <button class="btn" id="noBtn" aria-label="No button">No 😌</button>
 
   <div id="msg"></div>
 
   <script>
-    function yes() {
-      document.getElementById("msg").innerHTML =
+    function yes(){
+      document.getElementById("msg").textContent =
         "YAYYY 💖 Date confirmed 😄 I love you!";
     }
 
     const noBtn = document.getElementById("noBtn");
 
-    noBtn.addEventListener("mouseover", function () {
-      const x = Math.random() * (window.innerWidth - 100);
-      const y = Math.random() * (window.innerHeight - 50);
+    // Place the No button near the center-ish on load
+    function placeNoInitially(){
+      const x = (window.innerWidth / 2) + 40;
+      const y = (window.innerHeight / 2);
+      noBtn.style.left = x + "px";
+      noBtn.style.top  = y + "px";
+    }
+
+    function moveNo(){
+      const padding = 20;
+      const maxX = window.innerWidth  - noBtn.offsetWidth  - padding;
+      const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+      const x = Math.random() * (maxX - padding) + padding;
+      const y = Math.random() * (maxY - padding) + padding;
 
       noBtn.style.left = x + "px";
-      noBtn.style.top = y + "px";
-    });
-  </script>
+      noBtn.style.top  = y + "px";
+    }
 
+    // Run away on hover AND on attempted clicks
+    noBtn.addEventListener("mouseenter", moveNo);
+    noBtn.addEventListener("mousedown", (e) => { e.preventDefault(); moveNo(); });
+    noBtn.addEventListener("click", (e) => { e.preventDefault(); moveNo(); });
+
+    window.addEventListener("resize", () => {
+      // Keep it on-screen after resize
+      moveNo();
+    });
+
+    placeNoInitially();
+  </script>
 </body>
 </html>
-
